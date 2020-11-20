@@ -71,7 +71,7 @@ const store = {
       correctAnswer: 'Fårikål (cabbage and lamb stew)'
     },
     {//q8//
-      question: 'Who is the crown prince of Norway?',
+      question: 'Who are the crown prince and princess of Norway?',
       answers:  [
         'Prince Frederik and Princess Mary',
         'Prince Haakon and Princess Mette Marit',
@@ -104,12 +104,10 @@ const store = {
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
 // These functions return HTML templates
-function currentQuestionNumber(){
-   // this function will return the current question number to be inserted into the html and the store object
-   store.questionNumber +=1
-}
+// this function will return the current question number to be inserted into the html and the store object//
+
+//This function will provide the text for the welcome page//
 function generateWelcomePage(){
-//this function will provide the text for the welcome page that will be inserted into the dom
   return `  
   <div class="container">
     <header>
@@ -127,22 +125,12 @@ function generateWelcomePage(){
   <script src="https://code.jquery.com/jquery-3.4.1.slim.js" crossorigin="anonymous"></script>
   <script src="app.js"></script>`
 }
-// function generateQuestionNumberAndScore(){
-// //this function will provide the text for the current question number and current score on the question page
-//   return `
-//   <body class="container">
-//   <ul class="box li-box">
-//     <li id="question-number"><b>Question: ${store.questionNumber}/${store.questions.length}</b></li>
-//     <li id="score"><b>Number Correct: ${store.score}/${store.questions.length}</b></li>
-//   </ul>`
-// }
 
+//this function will generate the text for the current question and the current answer choices, as well as the current question number and score//
 function generateQuestionAndAnswers(){
-//this function will generate the text for the current question and the current answer choices, as well as the current question and score
   const number = store.questionNumber - 1
   const questionText = store.questions[number].question
-  
-  if (store.questionNumber < store.questions.length){
+
   return `
   <div class="container">
   <ul class="box li-box">
@@ -174,76 +162,40 @@ function generateQuestionAndAnswers(){
   </div>
 </div>
 </div>
-</div> `}
-else {return generateResultsPage()}
+</div> `
 }
 
 //this function generates the html for the results page//
 function generateResultsPage() {
+  if (store.score >= 6){
   return `  
   <div class="container">
     <div class="box">
      <h2>Congratulations!</h2>
     </div>
     <div class="box">
-      <h2>You got ${store.score} questions correct!</h2>
+      <h2>You got ${store.score}/${store.questions.length} questions correct!</h2>
+      <h3>Retake the quiz to show your smarts again!</h3>
+   </div>
+  <div class="no-border-box">
+  <button id="retake-quiz">Retake Quiz</button>
+</div>`}
+  if (store.score <= 5){
+    return `  
+  <div class="container">
+    <div class="box">
+     <h2>Good job!</h2>
+    </div>
+    <div class="box">
+      <h2>You got ${store.score}/${store.questions.length} questions correct.</h2>
+      <h3>Retake the quiz to boost your score!</h3>
    </div>
   <div class="no-border-box">
   <button id="retake-quiz">Retake Quiz</button>
 </div>`
-}
-/********** RENDER FUNCTION(S) **********/
-
-// This function conditionally replaces the contents of the <body> or <main> tags based on the state of the store
-function renderQuiz() {
-if(store.quizStarted===false) {
-    $('body').html(generateWelcomePage())
-    store.quizStarted = true
-  }
-  //store.questionNumber = 9
-  //store.questions.length = 8
-  
-  else if (store.questionNumber >= 0 && store.questionNumber <= 9){
-    currentQuestionNumber()
-    $('main').html(generateQuestionAndAnswers())
-    hideNextButton()
-  }
-  else {
-    $('main').html(generateResultsPage())
   }
 }
 
-  
-
-/********** EVENT HANDLER FUNCTIONS **********/
-
-// These functions handle events (submit, click, etc)
-//this function will generate the first question and answer when the begin button is clicked on the welcome page//
-function beginClicked() {
-$('div').on('click', '#begin', function(event) {
-  console.log('begin was clicked')
-  renderQuiz()
-  });
-}
-//this will generate the boxes that tell the user if their answer is correct or not when the submit button is clicked //
-function answerSubmitted() {
-    $('div').on('submit', 'form', function (event) {
-      event.preventDefault();
-      let selectedAnswer = $("input[type=radio]:checked").val()
-      let number = store.questionNumber - 1
-      let correctAnswer = store.questions[number].correctAnswer
-      let correctResponse = `<p class='correct-answer'>That is correct!</p>`
-      let incorrectResponse = `<p class='incorrect-answer'>Oops! The correct answer is: ${store.questions[number].correctAnswer}`
-      if (selectedAnswer === correctAnswer) {
-        store.score += 1;
-        $('#js-answer-response').html(correctResponse)
-      }
-      else {
-        $('#js-answer-response').html(incorrectResponse)
-      }
-      showNextButton()
-    });
-  }
 //this function will hide the next button so only the submit button is visible//
 function hideNextButton() {
   $("#js-next-question").hide();
@@ -253,11 +205,68 @@ function hideNextButton() {
 function showNextButton() {
    $("#js-next-question").show()
    $("#js-submit-answer").hide()
- }
+ }  
 
- //this function will load the next question and answer set//
+/********** RENDER FUNCTION(S) **********/
+
+// This function conditionally replaces the contents of the <body> or <main> tags based on the state of the store
+function renderQuiz() {
+if(store.quizStarted===false) {
+    $('body').html(generateWelcomePage())
+    store.quizStarted = true
+  }
+  else if (store.questionNumber >= 0 && store.questionNumber < store.questions.length){
+    store.questionNumber = store.questionNumber+1
+    // currentQuestionNumber()
+    $('main').html(generateQuestionAndAnswers())
+    hideNextButton()
+  }
+  else {
+    $('main').html(generateResultsPage())
+  }
+}
+
+
+/********** EVENT HANDLER FUNCTIONS **********/
+
+// These functions handle events (submit, click, etc)
+
+//This function will generate the first question and answer when the begin button is clicked on the welcome page//
+function beginClicked() {
+$('body').on('click', '#begin', function(event) {
+  renderQuiz()
+  });
+}
+
+//This will generate the boxes that tell the user if their answer is correct or not when the submit button is clicked and will prompt for an answer if none is chosen//
+function answerSubmitted() {
+    $('body').on('submit', 'form', function (event) {
+      event.preventDefault();
+      let selectedAnswer = $("input[type=radio]:checked").val()
+      let number = store.questionNumber - 1
+      let correctAnswer = store.questions[number].correctAnswer
+      let correctResponse = `<p class='correct-answer'>That is correct!</p>`
+      let incorrectResponse = `<p class='incorrect-answer'>Oops! The correct answer is: ${store.questions[number].correctAnswer}`
+      if (selectedAnswer === undefined){
+        $('#js-answer-response').html(`<p class="incorrect-answer">Please select an answer.</p>`)
+        hideNextButton()
+      }
+      else if (selectedAnswer === correctAnswer) {
+        store.score += 1;
+        $('#js-answer-response').html(correctResponse)
+        showNextButton()
+      }
+      else {
+        $('#js-answer-response').html(incorrectResponse)
+        showNextButton()
+      }
+    });
+}
+
+ //this function will prompt the next question and answer set to load//
   function nextQuestionClicked(){
-$('div').on('click', '#js-next-question', function(event){
+$('body').on('click', '#js-next-question', function(event){
+  event.preventDefault()
   renderQuiz()
   });
 }
