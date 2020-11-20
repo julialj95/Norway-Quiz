@@ -167,7 +167,7 @@ function generateQuestionAndAnswers(){
 
 //this function generates the html for the results page//
 function generateResultsPage() {
-  if (store.score >= 6){
+  if (store.score >= 8){
   return `  
   <div class="container">
     <div class="box">
@@ -175,12 +175,12 @@ function generateResultsPage() {
     </div>
     <div class="box">
       <h2>You got ${store.score}/${store.questions.length} questions correct!</h2>
-      <h3>Retake the quiz to show your smarts again!</h3>
+      <h3>Retake the quiz to show your expertise again!</h3>
    </div>
   <div class="no-border-box">
   <button id="retake-quiz">Retake Quiz</button>
 </div>`}
-  if (store.score <= 5){
+  if (store.score <= 7){
     return `  
   <div class="container">
     <div class="box">
