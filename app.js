@@ -1,10 +1,6 @@
-/**
- * Example store structure
- */
 const store = {
-  // 5 or more questions are required
   questions: [
-    {
+    {//q1//
       question: 'In what year did Norway gain independence from Sweden?',
       answers: [
         '1948',
@@ -14,7 +10,7 @@ const store = {
       ],
       correctAnswer: '1905'
     },
-    {
+    {//q2//
       question: "What is the date of Norway's Independence day?",
       answers: [
         'November 3rd',
@@ -24,7 +20,7 @@ const store = {
       ],
       correctAnswer: 'May 17th'
     },
-    {
+    {//q3//
       question: 'How many counties are there in Norway?',
       answers: [
         '5',
@@ -34,8 +30,8 @@ const store = {
       ],
       correctAnswer: '11'
     },
-    {
-      question: 'What is the population of Norway?'
+    {//q4//
+      question: 'What is the population of Norway?',
       answers:  [
         '5 million',
         '7 million',
@@ -44,8 +40,8 @@ const store = {
       ],
       correctAnswer: '5 million'
     },
-    {
-      question: 'What is the most populous city in Norway?'
+    {//q5//
+      question: 'What is the most populous city in Norway?',
       answers:  [
         'Bergen',
         'Trondheim',
@@ -54,8 +50,8 @@ const store = {
       ],
       correctAnswer: 'Oslo'
     },
-    {
-      question: 'How many political parties currently hold seats in Norwegian parliament?'
+    {//q6//
+      question: 'How many political parties currently hold seats in Norwegian parliament?',
       answers:  [
         '2',
         '5',
@@ -64,8 +60,8 @@ const store = {
       ],
       correctAnswer: '9'
     },
-    {
-      question: 'What is considered Norway’s national dish?'
+    {//q7//
+      question: 'What is considered Norway’s national dish?',
       answers:  [
         'Fiskesuppe (fish soup)',
         'Tacoer (tacos)',
@@ -74,8 +70,8 @@ const store = {
       ],
       correctAnswer: 'Fårikål (cabbage and lamb stew)'
     },
-    {
-      question: 'Who is the crown prince of Norway?'
+    {//q8//
+      question: 'Who is the crown prince of Norway?',
       answers:  [
         'Prince Frederik and Princess Mary',
         'Prince Haakon and Princess Mette Marit',
@@ -108,11 +104,180 @@ const store = {
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
 // These functions return HTML templates
+function currentQuestionNumber(){
+   // this function will return the current question number to be inserted into the html and the store object
+   store.questionNumber +=1
+}
+function generateWelcomePage(){
+//this function will provide the text for the welcome page that will be inserted into the dom
+  return `  
+  <div class="container">
+    <header>
+      <h1 class="box">How much do you know about Norway?</h1>
+    </header>
+    <main>
+      <div class="container">
+        <h2 class="box">Take this quiz to prove your knowledge!</h2>
+      <div class="no-border-box">
+      <button id="begin">Begin</button>
+      </div>
+    </div>
+  </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.js" crossorigin="anonymous"></script>
+  <script src="app.js"></script>`
+}
+// function generateQuestionNumberAndScore(){
+// //this function will provide the text for the current question number and current score on the question page
+//   return `
+//   <body class="container">
+//   <ul class="box li-box">
+//     <li id="question-number"><b>Question: ${store.questionNumber}/${store.questions.length}</b></li>
+//     <li id="score"><b>Number Correct: ${store.score}/${store.questions.length}</b></li>
+//   </ul>`
+// }
 
+function generateQuestionAndAnswers(){
+//this function will generate the text for the current question and the current answer choices, as well as the current question and score
+  const number = store.questionNumber - 1
+  const questionText = store.questions[number].question
+  
+  if (store.questionNumber < store.questions.length){
+  return `
+  <div class="container">
+  <ul class="box li-box">
+    <li id="question-number"><b>Question: ${store.questionNumber}/${store.questions.length}</b></li>
+    <li id="score"><b>Number Correct: ${store.score}/${store.questions.length}</b></li>
+  </ul>
+  <div class="container">
+  <div id="js-form" class="box">
+    <form>
+      <h2>${questionText}</h2><br>
+        <input name="answer" type="radio" value="${store.questions[number].answers[0]}">
+         <label for="${store.questions[number].answers[0]}">${store.questions[number].answers[0]}</label><br>
+        <input name="answer" type="radio" value="${store.questions[number].answers[1]}">
+         <label for="${store.questions[number].answers[1]}">${store.questions[number].answers[1]}</label><br>
+        <input name="answer" type="radio" value="${store.questions[number].answers[2]}">
+         <label for="${store.questions[number].answers[2]}">${store.questions[number].answers[2]}</label><br>
+        <input name="answer" type="radio" value="${store.questions[number].answers[3]}">
+         <label for="${store.questions[number].answers[3]}">${store.questions[number].answers[3]}</label><br>
+         <div id="js-answer-response"></div>
+    </form>
+  </div>
+  <div class="no-border-box">
+    <form id="js-submit-button">
+      <button id="js-submit-answer">Submit</button>
+    </form>
+    <form id="js-next-button">
+      <button id="js-next-question">Next</button>
+    <form>
+  </div>
+</div>
+</div>
+</div> `}
+else {return generateResultsPage()}
+}
+
+//this function generates the html for the results page//
+function generateResultsPage() {
+  return `  
+  <div class="container">
+    <div class="box">
+     <h2>Congratulations!</h2>
+    </div>
+    <div class="box">
+      <h2>You got ${store.score} questions correct!</h2>
+   </div>
+  <div class="no-border-box">
+  <button id="retake-quiz">Retake Quiz</button>
+</div>`
+}
 /********** RENDER FUNCTION(S) **********/
 
-// This function conditionally replaces the contents of the <main> tag based on the state of the store
+// This function conditionally replaces the contents of the <body> or <main> tags based on the state of the store
+function renderQuiz() {
+if(store.quizStarted===false) {
+    $('body').html(generateWelcomePage())
+    store.quizStarted = true
+  }
+  //store.questionNumber = 9
+  //store.questions.length = 8
+  
+  else if (store.questionNumber >= 0 && store.questionNumber <= 9){
+    currentQuestionNumber()
+    $('main').html(generateQuestionAndAnswers())
+    hideNextButton()
+  }
+  else {
+    $('main').html(generateResultsPage())
+  }
+}
+
+  
 
 /********** EVENT HANDLER FUNCTIONS **********/
 
 // These functions handle events (submit, click, etc)
+//this function will generate the first question and answer when the begin button is clicked on the welcome page//
+function beginClicked() {
+$('div').on('click', '#begin', function(event) {
+  console.log('begin was clicked')
+  renderQuiz()
+  });
+}
+//this will generate the boxes that tell the user if their answer is correct or not when the submit button is clicked //
+function answerSubmitted() {
+    $('div').on('submit', 'form', function (event) {
+      event.preventDefault();
+      let selectedAnswer = $("input[type=radio]:checked").val()
+      let number = store.questionNumber - 1
+      let correctAnswer = store.questions[number].correctAnswer
+      let correctResponse = `<p class='correct-answer'>That is correct!</p>`
+      let incorrectResponse = `<p class='incorrect-answer'>Oops! The correct answer is: ${store.questions[number].correctAnswer}`
+      if (selectedAnswer === correctAnswer) {
+        store.score += 1;
+        $('#js-answer-response').html(correctResponse)
+      }
+      else {
+        $('#js-answer-response').html(incorrectResponse)
+      }
+      showNextButton()
+    });
+  }
+//this function will hide the next button so only the submit button is visible//
+function hideNextButton() {
+  $("#js-next-question").hide();
+  $("#js-submit-answer").show();
+} 
+//this function will hide the submit button so only the next button is visible//
+function showNextButton() {
+   $("#js-next-question").show()
+   $("#js-submit-answer").hide()
+ }
+
+ //this function will load the next question and answer set//
+  function nextQuestionClicked(){
+$('div').on('click', '#js-next-question', function(event){
+  renderQuiz()
+  });
+}
+//when the user clicks the retake button, this function will take the user back to the beginning of the quiz//
+function retakeQuiz(){
+  $('div').on('click', '#retake-quiz', function(event) {
+    store.quizStarted = false;
+    store.questionNumber = 0;
+    store.score = 0;
+    renderQuiz()
+  });
+}
+
+// this function will call all the other functions to display the quiz as it currently stands//
+function runQuiz() {
+  renderQuiz()
+  beginClicked()
+  answerSubmitted()
+  nextQuestionClicked()
+  retakeQuiz()
+}
+
+$(runQuiz())

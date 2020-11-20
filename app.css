@@ -6,17 +6,20 @@
   * https://github.com/andreacardybailey/responsive_example/blob/master/styles/responsive-base.css 
   *
 */
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Montserrat&display=swap');
 * {
   box-sizing: border-box;
 }
 
-.button {
+button {
   display: flex;
+  padding: 10px;
+  margin: 10px;
 }
 
-img {
+/* img {
   width: 100%
-}
+} */
 
 .border {
   border: solid;
@@ -35,33 +38,81 @@ img {
   display: flex;
   justify-content: center;
   align-content: center;
-  background-color: gray;
+  background-color: white;
   border: solid;
+  border-radius: 25px;
   flex: 1;
   padding: 10px;
   margin: 10px;
+  text-align: center;
 }
 .no-border-box {
   display: flex;
   justify-content: center;
   text-align: center;
+  align-content: center;
+}
+.li-box {
+  display: block;
+}
+body {
+  background-image: url(images/norwegian-flag-1.jpg);
+  background-size: cover;
+}
 
+h1, h2, h3, p, li, form, button {
+  font-family: 'Julius Sans One';
+}
+form input[type="radio"] + label {
+  display: inline;
+  color: #000;
+  font-size: 24px;
+}
+form {
+  padding: 10px;
+  margin: 0 10px 10px 10px;
+}
+ul li {
+  list-style: none;
+  font-size: 20px;
+}
+
+.correct-answer {
+  border: solid;
+  background-color: lightgreen;
+  padding: 7px;
+
+}
+.incorrect-answer {
+  border: solid;
+  background-color:#ffcccb;
+  padding: 7px;
+
+}
+.hide {
+  display: none;
 }
 
 @media all and (min-width: 800px){
   .container {
     margin: 20px;
     padding: 20px;
+    justify-content: center;
   }
   .box {
-    margin-left: 30%;
-    margin-right: 30%;
+    margin-left: 20%;
+    margin-right: 20%;
+    /* justify-content: center; */
   }
-  img {
+  button {
+    margin: 20px;
+    padding: 10px;
+  }
+  /* img {
     max-width: 300px;
     padding: 20px;
     margin: 20px;
-  }
+  } */
   
 
 
