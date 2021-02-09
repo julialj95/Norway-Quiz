@@ -1,11 +1,12 @@
-#Norway Quiz App
+# Norway Quiz App
 
-###This app is a quiz that allows users to test their knowledge about the country of Norway.
+### This app is a quiz that allows users to test their knowledge about the country of Norway.
 
-#Links
+# Links
 
 [Quiz Link](https://julialj95.github.io/Norway-Quiz/)
 
-#Technology 
+# Technology 
+
 ###Built using JavaScript and jQuery.
 
